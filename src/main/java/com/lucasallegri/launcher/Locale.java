@@ -26,6 +26,8 @@ public class Locale {
           "Polski",
           "Português (Brasil)",
           "Русский",
+          "简体中文",
+          "繁体中文",
   };
 
   public static void setup() {
@@ -94,6 +96,10 @@ public class Locale {
         return "Polski";
       case "ar":
         return "Arabic";
+      case "zh-hans":
+        return "简体中文";
+      case "zh-hant":
+        return "繁体中文";
     }
     return null;
   }
@@ -122,6 +128,10 @@ public class Locale {
         return "pl";
       case "Arabic":
         return "ar";
+      case "简体中文":
+        return "zh-hans";
+      case "繁体中文":
+        return "zh-hant";
     }
     return null;
   }
