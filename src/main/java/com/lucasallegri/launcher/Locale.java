@@ -26,8 +26,8 @@ public class Locale {
           "Polski",
           "Português (Brasil)",
           "Русский",
-          "简体中文",
-          "繁体中文",
+          "Chinese (Simplified)",
+          "Chinese (Traditional)",
   };
 
   public static void setup() {
@@ -97,9 +97,9 @@ public class Locale {
       case "ar":
         return "Arabic";
       case "zh-hans":
-        return "简体中文";
+        return "Chinese (Simplified)";
       case "zh-hant":
-        return "繁体中文";
+        return "Chinese (Traditional)";
     }
     return null;
   }
@@ -128,9 +128,9 @@ public class Locale {
         return "pl";
       case "Arabic":
         return "ar";
-      case "简体中文":
+      case "Chinese (Simplified)":
         return "zh-hans";
-      case "繁体中文":
+      case "Chinese (Traditional)":
         return "zh-hant";
     }
     return null;
