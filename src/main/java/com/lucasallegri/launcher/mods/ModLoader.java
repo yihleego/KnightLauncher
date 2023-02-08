@@ -1,6 +1,5 @@
 package com.lucasallegri.launcher.mods;
 
-import com.lucasallegri.bootstrap.ProjectXDigester;
 import com.lucasallegri.discord.DiscordRPC;
 import com.lucasallegri.launcher.*;
 import com.lucasallegri.launcher.mods.data.JarMod;
@@ -126,7 +125,7 @@ public class ModLoader {
 
     mountRequired = false;
     ProgressBar.finishTask();
-    ProjectXDigester.doDigest();
+    LauncherDigester.doDigest();
     LauncherGUI.launchButton.setEnabled(true);
   }
 

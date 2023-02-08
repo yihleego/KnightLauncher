@@ -1,7 +1,4 @@
-package com.lucasallegri.bootstrap;
-
-import com.lucasallegri.launcher.LauncherGlobals;
-import com.lucasallegri.launcher.Log;
+package com.lucasallegri.launcher;
 
 import java.io.BufferedReader;
 import java.io.File;
@@ -14,7 +11,7 @@ import java.security.MessageDigest;
 /**
  * @author Leego Yih
  */
-public class ProjectXDigester {
+public class LauncherDigester {
   public static final String KL_JAR_PATH = "/KnightLauncher.jar";
   public static final String KL_JARV_PATH = "/KnightLauncher.jarv";
   public static final String GETDOWN_PATH = "/getdown.txt";

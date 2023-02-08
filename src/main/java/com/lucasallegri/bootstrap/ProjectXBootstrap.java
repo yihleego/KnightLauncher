@@ -22,8 +22,6 @@ import java.util.zip.ZipFile;
 /**
  * Bootstraps instead of {@literal com.threerings.projectx.client.ProjectXApp} for loading mods and language packs.
  * <p>
- * Activates when there is a file named "mods.conf" in the "/code-mods/" directory.
- * <p>
  * Makes sure the "META-INF/MANIFEST.MF" is included in each mod jars,
  * and the main class must be specified.
  *
@@ -45,7 +43,7 @@ public class ProjectXBootstrap {
     // X.dM("projectx.log");
     invokeMethod("com.threerings.util.X", "dM", null, new Object[]{"projectx.log"});
 
-    loadJarMods(); // all configured mods
+    loadJarMods();
 
     String ticket = null;
     String password;
