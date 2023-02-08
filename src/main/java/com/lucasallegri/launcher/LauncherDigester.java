@@ -18,6 +18,7 @@ public class LauncherDigester {
   public static final String DIGEST_PATH = "/digest.txt";
   public static final String MAGIC_HEAD = "# Customized by KnightLauncher";
   public static final String GETDOWN_PROJECTXAPP_CLASS = "class = com.threerings.projectx.client.ProjectXApp";
+  public static final String GETDOWN_PROJECTXAPP_CLIENT_CLASS = "client.class = com.threerings.projectx.client.ProjectXApp";
   public static final String GETDOWN_BOOTSTRAP_CLASS = "class = com.lucasallegri.bootstrap.ProjectXBootstrap";
   public static final String GETDOWN_BOOTSTRAP_CLIENT_CLASS = "client.class = com.lucasallegri.bootstrap.ProjectXBootstrap";
   public static final String GETDOWN_KL_JAR = "code = KnightLauncher.jar";
@@ -29,14 +30,18 @@ public class LauncherDigester {
       File klJarvFile = new File(LauncherGlobals.USER_DIR + KL_JARV_PATH);
       File getdownFile = new File(LauncherGlobals.USER_DIR + GETDOWN_PATH);
       File digestFile = new File(LauncherGlobals.USER_DIR + DIGEST_PATH);
-      String getdownContent = readFile(getdownFile);
-      String digestContent = readFile(digestFile);
+      String getdownContent = readFile(getdownFile).trim();
+      String digestContent = readFile(digestFile).trim();
       // Build a new "getdown.txt" file if it has not been modified by KL
       if (!getdownContent.startsWith(MAGIC_HEAD)) {
+        getdownFile.renameTo(new File(getdownFile.getAbsoluteFile() + ".bak"));
+        getdownContent = getdownContent
+            .replace("\n"+GETDOWN_PROJECTXAPP_CLIENT_CLASS, "\n#" + GETDOWN_PROJECTXAPP_CLIENT_CLASS)
+            .replace("\n"+GETDOWN_PROJECTXAPP_CLASS, "\n#" + GETDOWN_PROJECTXAPP_CLASS);
         StringBuilder sb = new StringBuilder()
-            .append(MAGIC_HEAD)
-            .append("\n")
-            .append(getdownContent.replace(GETDOWN_PROJECTXAPP_CLASS, "#" + GETDOWN_PROJECTXAPP_CLASS))
+            .append(MAGIC_HEAD).append("\n")
+            .append(getdownContent).append("\n\n")
+            .append("# KnightLauncher resources").append("\n")
             .append(GETDOWN_KL_JAR).append("\n")
             .append(GETDOWN_BOOTSTRAP_CLASS).append("\n")
             .append(GETDOWN_BOOTSTRAP_CLIENT_CLASS).append("\n");
