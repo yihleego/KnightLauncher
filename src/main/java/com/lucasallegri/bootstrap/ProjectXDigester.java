@@ -15,7 +15,8 @@ import java.security.MessageDigest;
  * @author Leego Yih
  */
 public class ProjectXDigester {
-  public static final String KL_PATH = "/KnightLauncher.jar";
+  public static final String KL_JAR_PATH = "/KnightLauncher.jar";
+  public static final String KL_JARV_PATH = "/KnightLauncher.jarv";
   public static final String GETDOWN_PATH = "/getdown.txt";
   public static final String DIGEST_PATH = "/digest.txt";
   public static final String MAGIC_HEAD = "# Customized by KnightLauncher";
@@ -27,6 +28,8 @@ public class ProjectXDigester {
   public static void doDigest() {
     try {
       // Guarantee that the files exists
+      File klJarFile = new File(LauncherGlobals.USER_DIR + KL_JAR_PATH);
+      File klJarvFile = new File(LauncherGlobals.USER_DIR + KL_JARV_PATH);
       File getdownFile = new File(LauncherGlobals.USER_DIR + GETDOWN_PATH);
       File digestFile = new File(LauncherGlobals.USER_DIR + DIGEST_PATH);
       String getdownContent = readFile(getdownFile);
@@ -42,9 +45,13 @@ public class ProjectXDigester {
             .append(GETDOWN_BOOTSTRAP_CLIENT_CLASS).append("\n");
         writeFile(getdownFile, sb.toString());
       }
+      // For Windows
+      if (!klJarvFile.exists()) {
+        klJarvFile.createNewFile();
+      }
       // Calculate the MD5 of the files
-      String klMD5 = md5(LauncherGlobals.USER_DIR + KL_PATH);
-      String getdownMD5 = md5(LauncherGlobals.USER_DIR + GETDOWN_PATH);
+      String klMD5 = md5(klJarFile.getAbsolutePath());
+      String getdownMD5 = md5(getdownFile.getAbsolutePath());
       // Build a new "digest.txt" file from the original one
       digestContent = digestContent.trim();
       digestContent = digestContent.replaceFirst("digest\\.txt = \\S+", "");

@@ -1,6 +1,5 @@
 package com.lucasallegri.launcher;
 
-import com.lucasallegri.bootstrap.ProjectXDigester;
 import com.lucasallegri.discord.DiscordRPC;
 import com.lucasallegri.launcher.mods.ModLoader;
 import com.lucasallegri.launcher.settings.GameSettings;
@@ -16,8 +15,6 @@ public class LauncherEventHandler {
   private static final String[] RPC_COMMAND_LINE = new String[] { ".\\KnightLauncher\\modules\\skdiscordrpc\\SK-DiscordRPC.exe" };
 
   public static void launchGameEvent() {
-
-    launchBefore();
 
     Thread launchThread = new Thread(() -> {
 
@@ -58,8 +55,6 @@ public class LauncherEventHandler {
 
   public static void launchGameAltEvent() {
 
-    launchBefore();
-
     Thread launchAltThread = new Thread(() -> {
 
       if (!SystemUtil.isWindows()) {
@@ -73,9 +68,5 @@ public class LauncherEventHandler {
     });
     launchAltThread.start();
 
-  }
-
-  public static void launchBefore() {
-    ProjectXDigester.doDigest();
   }
 }

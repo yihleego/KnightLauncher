@@ -1,19 +1,21 @@
 package com.lucasallegri.bootstrap;
 
-import com.lucasallegri.launcher.settings.SettingsProperties;
-
 import javax.swing.*;
 import java.io.BufferedReader;
 import java.io.File;
+import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.lang.reflect.Constructor;
 import java.lang.reflect.Method;
 import java.net.URL;
 import java.net.URLClassLoader;
+import java.nio.file.Files;
+import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Properties;
 import java.util.Set;
 import java.util.zip.ZipFile;
 
@@ -37,11 +39,11 @@ public class ProjectXBootstrap {
   public static void main(String[] args) throws Exception {
     System.setProperty("com.threerings.io.enumPolicy", "ORDINAL");
     // ak.gm()
-    if ((boolean) invokeMethod("com.samskivert.util.ak", "gm", null)) {
+    if ((boolean) invokeMethod("com.samskivert.util.ak", "gm", null, new Object[0])) {
       UIManager.setLookAndFeel(UIManager.getCrossPlatformLookAndFeelClassName());
     }
     // X.dM("projectx.log");
-    invokeMethod("com.threerings.util.X", "dm", null, new Object[]{"projectx.log"});
+    invokeMethod("com.threerings.util.X", "dM", null, new Object[]{"projectx.log"});
 
     loadJarMods(); // all configured mods
 
@@ -67,13 +69,13 @@ public class ProjectXBootstrap {
         .getDeclaredConstructor(String.class, String.class, boolean.class, String.class, String.class, String.class, String.class, String.class);
     constructor.setAccessible(true);
     Object app = constructor.newInstance(username, password, encrypted, knight, action, arg, sessionKey, ticket);
-    invokeMethod("com.threerings.projectx.client.ProjectXApp", "startup", app);
+    invokeMethod("com.threerings.projectx.client.ProjectXApp", "startup", app, new Object[0]);
   }
 
   static void loadJarMods() {
     // Read disabled jar mods from KnightLauncher.properties
     Set<String> disabledJarMods = new HashSet<>();
-    String disabledJarModsString = SettingsProperties.getValue("modloader.disabledMods");
+    String disabledJarModsString = getConfigValue("modloader.disabledMods");
     if (disabledJarModsString != null && disabledJarModsString.length() > 0) {
       for (String disabledJarMod : disabledJarModsString.split(",")) {
         disabledJarMod = disabledJarMod.trim();
@@ -184,9 +186,36 @@ public class ProjectXBootstrap {
     }
   }
 
-  static Object invokeMethod(String className, String methodName, Object object, Object... args) throws Exception {
+  static String getConfigValue(String key) {
+    Properties _prop = new Properties();
+    String value;
+    try (InputStream is = Files.newInputStream(Paths.get(System.getProperty("user.dir") + File.separator + "KnightLauncher.properties"))) {
+      _prop.load(is);
+      value = _prop.getProperty(key);
+      return value;
+    } catch (IOException ignored) {
+    }
+    return null;
+  }
+
+  static Object invokeMethod(String className, String methodName, Object object, Object[] args) throws Exception {
     Class<?> clazz = Class.forName(className);
-    Method method = clazz.getDeclaredMethod(methodName);
-    return method.invoke(object, args);
+    Method[] methods = clazz.getDeclaredMethods();
+    for (int i = 0; i < methods.length; i++) {
+      Method method = methods[i];
+      if (method.getName().equals(methodName)) {
+        method.setAccessible(true);
+        return method.invoke(object, args);
+      }
+    }
+    methods = clazz.getMethods();
+    for (int i = 0; i < methods.length; i++) {
+      Method method = methods[i];
+      if (method.getName().equals(methodName)) {
+        method.setAccessible(true);
+        return method.invoke(object, args);
+      }
+    }
+    throw new NoSuchMethodException(methodName);
   }
 }
